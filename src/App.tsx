@@ -4,6 +4,7 @@ import { ShoppingCart, User } from 'lucide-react';
 import { ProductList } from './components/product-list';
 import { Cart } from './components/cart';
 import { UserSettings } from './components/user-settings';
+import {useCart} from "./hooks/useCart.ts";
 
 import './App.css'
 
@@ -13,6 +14,8 @@ function App() {
         localStorage.getItem('userEmail') || 'default@example.com'
     );
 
+    const { items: cartItems } = useCart();
+
     useEffect(() => {
         if (!localStorage.getItem('userEmail')) {
             setIsUserSettingsOpen(true);
@@ -21,12 +24,12 @@ function App() {
 
     return (
         <BrowserRouter>
-            <div className="min-h-screen bg-gray-100 w-full">
+            <div className="min-h-screen bg-gray-100">
                 <nav className="bg-white shadow-sm">
                     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                         <div className="flex justify-between h-16">
-                            <div className="flex">
-                                <Link to="/" className="flex items-center text-xl font-bold text-gray-800">
+                            <div className="flex items-center">
+                                <Link to="/" className="text-xl font-bold text-gray-800">
                                     MyShop
                                 </Link>
                             </div>
@@ -34,11 +37,20 @@ function App() {
                                 <button
                                     onClick={() => setIsUserSettingsOpen(true)}
                                     className="p-2 rounded-full hover:bg-gray-100"
+                                    title={userEmail}
                                 >
                                     <User className="h-6 w-6" />
                                 </button>
-                                <Link to="/cart" className="p-2 rounded-full hover:bg-gray-100">
+                                <Link
+                                    to="/cart"
+                                    className="p-2 rounded-full hover:bg-gray-100 relative"
+                                >
                                     <ShoppingCart className="h-6 w-6" />
+                                    {cartItems.length > 0 && (
+                                        <span className="absolute -top-1 -right-1 bg-blue-600 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
+                      {cartItems.length}
+                    </span>
+                                    )}
                                 </Link>
                             </div>
                         </div>
